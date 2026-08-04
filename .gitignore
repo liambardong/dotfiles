@@ -1,0 +1,5 @@
+# Neovim generated files
+nvim/.nvimlog
+
+# macOS
+.DS_Store

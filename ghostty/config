@@ -1,0 +1,4 @@
+custom-shader = shaders/cursor-shaders/cursor_tail.glsl
+
+# Keeps animation running even when the window loses focus
+custom-shader-animation = always
