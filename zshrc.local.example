@@ -1,0 +1,10 @@
+# Template for machine-specific zsh config.
+# Copy this to ~/.zshrc.local (NOT into the dotfiles repo) and edit per machine.
+# ~/.zshrc sources it automatically if it exists.
+
+export PATH="$HOME/.rbenv/shims:$PATH"
+export PATH="/opt/homebrew/opt/libpq/bin:$PATH"
+export PATH="/opt/homebrew/bin:/opt/homebrew/sbin:$PATH"
+export PATH="$HOME/development/flutter/bin:$PATH"
+
+eval "$(rbenv init -)"

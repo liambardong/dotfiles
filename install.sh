@@ -23,6 +23,13 @@ backup_and_link() {
     echo "Linked $src -> $dest"
 }
 
+# zsh
+backup_and_link "$DOTFILES_DIR/.zshrc" "$HOME/.zshrc"
+if [ ! -e "$HOME/.zshrc.local" ]; then
+    cp "$DOTFILES_DIR/zshrc.local.example" "$HOME/.zshrc.local"
+    echo "Created $HOME/.zshrc.local from template — edit it for this machine."
+fi
+
 # tmux
 backup_and_link "$DOTFILES_DIR/tmux.conf" "$HOME/.tmux.conf"
 
