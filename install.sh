@@ -32,6 +32,9 @@ fi
 
 # tmux
 backup_and_link "$DOTFILES_DIR/tmux.conf" "$HOME/.tmux.conf"
+mkdir -p "$HOME/.tmux"
+backup_and_link "$DOTFILES_DIR/dayfox.tmux.conf" "$HOME/.tmux/dayfox.tmux.conf"
+backup_and_link "$DOTFILES_DIR/terafox.tmux.conf" "$HOME/.tmux/terafox.tmux.conf"
 
 # ghostty
 backup_and_link "$DOTFILES_DIR/ghostty" "$HOME/.config/ghostty"
