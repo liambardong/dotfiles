@@ -14,7 +14,7 @@ My personal configuration files for tmux, neovim, and ghostty.
 
 1. Clone this repository:
    ```bash
-   git clone git@github.com:YOUR_USERNAME/dotfiles.git ~/dotfiles
+   git clone git@github.com:liambardong/dotfiles.git ~/dotfiles
    ```
 
 2. Run the install script:
