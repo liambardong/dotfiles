@@ -3,6 +3,15 @@ return {
     "EdenEast/nightfox.nvim",
     lazy = false,
     priority = 1000,
+    -- Let Ghostty's transparency show through (dayfox/terafox included)
+    opts = {
+      options = {
+        transparent = true,
+      },
+    },
+    config = function(_, opts)
+      require("nightfox").setup(opts)
+    end,
   },
   {
     "f-person/auto-dark-mode.nvim",
