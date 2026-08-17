@@ -1,0 +1,132 @@
+#!/bin/zsh
+# Usage: set-theme <theme-family>
+# Switches Ghostty, tmux, and nvim to use the specified theme family
+
+set -e
+
+DOTFILES="$HOME/dotfiles"
+THEME="$1"
+
+get_theme_config() {
+  case "$1" in
+    nightfox)   echo "Dayfox|Terafox|dayfox|terafox" ;;
+    nvim)       echo "Nvim Light|Nvim Dark|nvim-light|nvim-dark" ;;
+    catppuccin) echo "Catppuccin Latte|Catppuccin Mocha|catppuccin-latte|catppuccin-mocha" ;;
+    tokyonight) echo "Tokyo Night Day|Tokyo Night|tokyonight-day|tokyonight" ;;
+    gruvbox)    echo "Gruvbox Light|GruvboxDark|gruvbox-light|gruvbox-dark" ;;
+    rose-pine)  echo "Rosé Pine Dawn|Rosé Pine|rose-pine-dawn|rose-pine" ;;
+    solarized)  echo "Solarized Light|Solarized Dark|solarized-light|solarized-dark" ;;
+    nord)       echo "Nord Light|Nord|nord-light|nord" ;;
+    *)          echo "" ;;
+  esac
+}
+
+list_themes() {
+  echo "Available themes:"
+  echo "  - catppuccin"
+  echo "  - gruvbox"
+  echo "  - nightfox"
+  echo "  - nord"
+  echo "  - nvim        (neovim default)"
+  echo "  - rose-pine"
+  echo "  - solarized"
+  echo "  - tokyonight"
+}
+
+if [[ -z "$THEME" ]]; then
+  echo "Usage: set-theme <theme-family>"
+  echo ""
+  list_themes
+  exit 1
+fi
+
+CONFIG=$(get_theme_config "$THEME")
+
+if [[ -z "$CONFIG" ]]; then
+  echo "Unknown theme: $THEME"
+  echo ""
+  list_themes
+  exit 1
+fi
+
+GHOSTTY_LIGHT="${CONFIG%%|*}"; CONFIG="${CONFIG#*|}"
+GHOSTTY_DARK="${CONFIG%%|*}"; CONFIG="${CONFIG#*|}"
+NVIM_LIGHT="${CONFIG%%|*}"
+NVIM_DARK="${CONFIG#*|}"
+
+echo "Setting theme to: $THEME"
+echo "  Ghostty: light=$GHOSTTY_LIGHT, dark=$GHOSTTY_DARK"
+echo "  Neovim:  light=$NVIM_LIGHT, dark=$NVIM_DARK"
+
+# Update Ghostty config
+sed -i '' "s/^theme = light:.*,dark:.*/theme = light:$GHOSTTY_LIGHT,dark:$GHOSTTY_DARK/" "$DOTFILES/ghostty/config"
+echo "  ✓ Updated Ghostty config"
+
+# Update nvim auto-dark-mode.lua
+NVIM_CONFIG="$DOTFILES/nvim/lua/plugins/auto-dark-mode.lua"
+
+if [[ "$THEME" == "nvim" ]]; then
+  # Special case: nvim default theme needs background setting
+  awk '
+    /set_dark_mode = function/ {
+      print "      set_dark_mode = function()"
+      print "        vim.o.background = \"dark\""
+      print "        vim.cmd(\"colorscheme default\")"
+      print "      end,"
+      # skip until we hit end,
+      while (getline && !/end,/) {}
+      next
+    }
+    /set_light_mode = function/ {
+      print "      set_light_mode = function()"
+      print "        vim.o.background = \"light\""
+      print "        vim.cmd(\"colorscheme default\")"
+      print "      end,"
+      while (getline && !/end,/) {}
+      next
+    }
+    { print }
+  ' "$NVIM_CONFIG" > "$NVIM_CONFIG.tmp" && mv "$NVIM_CONFIG.tmp" "$NVIM_CONFIG"
+else
+  # Standard colorscheme replacement
+  awk -v light="$NVIM_LIGHT" -v dark="$NVIM_DARK" '
+    /set_dark_mode = function/ {
+      print "      set_dark_mode = function()"
+      print "        vim.cmd(\"colorscheme " dark "\")"
+      print "      end,"
+      while (getline && !/end,/) {}
+      next
+    }
+    /set_light_mode = function/ {
+      print "      set_light_mode = function()"
+      print "        vim.cmd(\"colorscheme " light "\")"
+      print "      end,"
+      while (getline && !/end,/) {}
+      next
+    }
+    { print }
+  ' "$NVIM_CONFIG" > "$NVIM_CONFIG.tmp" && mv "$NVIM_CONFIG.tmp" "$NVIM_CONFIG"
+fi
+echo "  ✓ Updated Neovim config"
+
+# Update tmux dark-notify paths
+TMUX_CONFIG="$DOTFILES/tmux.conf"
+sed -i '' "s|dark-notify-theme-path-light '.*'|dark-notify-theme-path-light '\$HOME/dotfiles/${NVIM_LIGHT}.tmux.conf'|" "$TMUX_CONFIG"
+sed -i '' "s|dark-notify-theme-path-dark '.*'|dark-notify-theme-path-dark '\$HOME/dotfiles/${NVIM_DARK}.tmux.conf'|" "$TMUX_CONFIG"
+echo "  ✓ Updated tmux config"
+
+LIGHT_TMUX="$DOTFILES/${NVIM_LIGHT}.tmux.conf"
+DARK_TMUX="$DOTFILES/${NVIM_DARK}.tmux.conf"
+
+echo ""
+if [[ -f "$LIGHT_TMUX" && -f "$DARK_TMUX" ]]; then
+  echo "Done! Restart Ghostty, Neovim, and tmux to apply changes."
+else
+  echo "Done! Restart Ghostty and Neovim to apply changes."
+  echo ""
+  echo "⚠ Missing tmux theme files:"
+  [[ ! -f "$LIGHT_TMUX" ]] && echo "  - $LIGHT_TMUX"
+  [[ ! -f "$DARK_TMUX" ]] && echo "  - $DARK_TMUX"
+  echo ""
+  echo "Create these files or tmux will fail to load themes."
+fi

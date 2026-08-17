@@ -31,15 +31,18 @@ if [ ! -e "$HOME/.zshrc.local" ]; then
 fi
 
 # tmux
+# Theme files are read directly from $DOTFILES_DIR by tmux-dark-notify,
+# so they don't need symlinking. See tmux.conf and ./set-theme.
 backup_and_link "$DOTFILES_DIR/tmux.conf" "$HOME/.tmux.conf"
-mkdir -p "$HOME/.tmux"
-backup_and_link "$DOTFILES_DIR/dayfox.tmux.conf" "$HOME/.tmux/dayfox.tmux.conf"
-backup_and_link "$DOTFILES_DIR/terafox.tmux.conf" "$HOME/.tmux/terafox.tmux.conf"
 
 # ghostty
 backup_and_link "$DOTFILES_DIR/ghostty" "$HOME/.config/ghostty"
 
 # neovim
 backup_and_link "$DOTFILES_DIR/nvim" "$HOME/.config/nvim"
+
+# set-theme helper script
+mkdir -p "$HOME/.local/bin"
+backup_and_link "$DOTFILES_DIR/set-theme" "$HOME/.local/bin/set-theme"
 
 echo "Done! Dotfiles installed."
