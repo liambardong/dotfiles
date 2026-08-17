@@ -24,11 +24,3 @@ vim.api.nvim_create_autocmd("FileChangedShellPost", {
     vim.cmd("filetype detect")
   end,
 })
-
-vim.api.nvim_create_autocmd("ColorScheme", {
-  group = vim.api.nvim_create_augroup("fix_statusline_bg", { clear = true }),
-  callback = function()
-    vim.api.nvim_set_hl(0, "StatusLine", { bg = "NONE" })
-    vim.api.nvim_set_hl(0, "StatusLineNC", { bg = "NONE" })
-  end,
-})
