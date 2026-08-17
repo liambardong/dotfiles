@@ -1,3 +1,10 @@
+# Theme switching based on system appearance
+theme = light:Nvim Light,dark:Nvim Dark
+
+# Cursor color follows theme (fixes color not updating on mode switch)
+cursor-color = cell-foreground
+cursor-text = cell-background
+
 custom-shader = shaders/cursor-shaders/cursor_tail.glsl
 
 # Keeps animation running even when the window loses focus

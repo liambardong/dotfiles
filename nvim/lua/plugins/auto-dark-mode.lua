@@ -19,10 +19,16 @@ return {
     lazy = false,
     opts = {
       set_dark_mode = function()
-        vim.cmd("colorscheme terafox")
+        vim.o.background = "dark"
+        vim.cmd("colorscheme default")
+        local ok, lualine = pcall(require, "lualine")
+        if ok then lualine.refresh() end
       end,
       set_light_mode = function()
-        vim.cmd("colorscheme dayfox")
+        vim.o.background = "light"
+        vim.cmd("colorscheme default")
+        local ok, lualine = pcall(require, "lualine")
+        if ok then lualine.refresh() end
       end,
       update_interval = 3000,
       fallback = "dark",
