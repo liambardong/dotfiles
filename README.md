@@ -1,12 +1,13 @@
 # Dotfiles
 
-My personal configuration files for tmux, neovim, and ghostty.
+My personal configuration files for neovim and ghostty.
 
 ## Contents
 
-- `tmux.conf` - tmux configuration
 - `nvim/` - Neovim configuration (LazyVim)
 - `ghostty/` - Ghostty terminal configuration
+- `.zshrc` - zsh configuration (machine-specific bits go in `~/.zshrc.local`)
+- `set-theme` - switches Ghostty and Neovim to a theme family, e.g. `set-theme tokyonight`
 
 ## Installation
 

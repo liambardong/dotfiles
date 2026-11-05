@@ -1,5 +1,8 @@
 # Theme switching based on system appearance
-theme = light:Nvim Light,dark:Nvim Dark
+theme = light:Atom One Light,dark:Atom One Dark
+
+# Window transparency (nvim themes are set transparent to show this through)
+background-opacity = 0.8
 
 # Cursor color follows theme (fixes color not updating on mode switch)
 cursor-color = cell-foreground

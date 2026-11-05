@@ -30,11 +30,6 @@ if [ ! -e "$HOME/.zshrc.local" ]; then
     echo "Created $HOME/.zshrc.local from template — edit it for this machine."
 fi
 
-# tmux
-# Theme files are read directly from $DOTFILES_DIR by tmux-dark-notify,
-# so they don't need symlinking. See tmux.conf and ./set-theme.
-backup_and_link "$DOTFILES_DIR/tmux.conf" "$HOME/.tmux.conf"
-
 # ghostty
 backup_and_link "$DOTFILES_DIR/ghostty" "$HOME/.config/ghostty"
 

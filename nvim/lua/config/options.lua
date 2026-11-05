@@ -23,13 +23,8 @@ vim.api.nvim_create_autocmd("BufWritePre", {
 vim.g.lazyvim_ruby_lsp = "ruby_lsp"
 vim.g.lazyvim_ruby_formatter = "rubocop"
 
+-- don't let the lsp root_dir (nearest Gemfile) re-root the explorer/pickers in the monorepo
+vim.g.root_spec = { "cwd" }
+
 -- Insert final newline
 vim.opt.fixendofline = true
-
--- Format on save (handled by conform.nvim above)
-vim.api.nvim_create_autocmd("BufWritePre", {
-  pattern = "*",
-  callback = function()
-    require("conform").format({ async = false, lsp_fallback = true })
-  end,
-})

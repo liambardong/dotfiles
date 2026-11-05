@@ -13,3 +13,6 @@ alias vim='nvim'
 bindkey "^r" history-incremental-search-backward
 
 [ -f "$HOME/.zshrc.local" ] && source "$HOME/.zshrc.local"
+
+# Added by Devin
+export PATH="/Users/liambardong/.codeium/windsurf/bin:$PATH"
